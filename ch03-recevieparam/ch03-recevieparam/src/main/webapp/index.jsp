@@ -18,6 +18,13 @@
         年龄：<input type="text" name="rage"><br/>
         <input type="submit" value="提交参数">
     </form>
+    <br/>
+    <p>使用java对象接收请求参数</p>
+    <form action="receiveobject.do" method="post">
+        姓名：<input type="text" name="name"><br/>
+        年龄：<input type="text" name="age"><br/>
+        <input type="submit" value="提交参数">
+    </form>
 
 </body>
 </html>
