@@ -17,6 +17,8 @@ import javax.servlet.http.HttpSession;
 import javax.swing.plaf.synth.SynthTableUI;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @RequestMapping: value ：所有请求地址的公共部分，叫做模块名称
@@ -101,6 +103,25 @@ public class MyController {
         student.setName("李四同学");
         student.setAge(20);
         return student;//会被框架转为json
+    }
+
+    //处理器方法返回List<Student>
+    @RequestMapping(value = "/returnStudentJsonArray.do")
+    @ResponseBody
+    public List<Student> doStudentJsonObjectArray(String name,Integer age){
+        List<Student> list = new ArrayList<>();
+        //调用service，获取请求结果数据，Student对象表示结果数据
+        Student student = new Student();
+        student.setName("李四同学");
+        student.setAge(20);
+        list.add(student);
+
+        student = new Student();
+        student.setName("张三");
+        student.setAge(28);
+        list.add(student);
+
+        return  list;
     }
 
 }

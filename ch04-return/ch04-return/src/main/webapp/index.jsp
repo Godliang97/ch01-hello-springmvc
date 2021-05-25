@@ -9,7 +9,7 @@
                 // alert("button click");
                 $.ajax({
                     // url:"returnVoid-ajax.do",
-                    url:"returnStudentJson.do",
+                    url:"returnStudentJsonArray.do",
                     data:{
                         name:"zhangsan",
                         age:20
@@ -19,7 +19,14 @@
                     success:function (resp) {
                         //resp从服务器端返回的是json格式的字符串 {"name":"zhangsan","age":20}
                         //jquery会把字符串转为json对象，赋值给resp形参
-                        alert(resp.name + "   "+resp.age);
+
+                        //[{"name":"李四同学","age":20},{"name":"张三","age":28}]
+                        // alert(resp.name + "   "+resp.age);
+
+                        $.each(resp, function (i, n) {
+                            alert(n.name+"   "+n.age)
+
+                        });
                     }
                 })
             })
