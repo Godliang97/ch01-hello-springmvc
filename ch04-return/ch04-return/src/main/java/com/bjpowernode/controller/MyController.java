@@ -56,7 +56,7 @@ public class MyController {
     //处理器方法返回void，响应ajax请求
     //手工实现ajax，json数据：代码有重复的 1.java对象转为json； 2.通过HttpServletResponse输出json数据
     @RequestMapping(value = "/returnVoid-ajax.do")
-    public void doReturnVoidAjax(HttpServletResponse response,String name, Integer age) throws IOException {
+    public void doReturnVoidAjax(HttpServletResponse response, String name, Integer age) throws IOException {
         System.out.println("===doReturnVoidAjax===, name=" + name + "  age=" + age);
         //处理ajax，使用json做数据的格式
         //service调用完成了，使用Student表示处理的结果
@@ -69,7 +69,7 @@ public class MyController {
         if (student != null) {
             ObjectMapper om = new ObjectMapper();
             json = om.writeValueAsString(student);
-            System.out.println("student转换的json===="+json);
+            System.out.println("student转换的json====" + json);
         }
 
         //输出数据，响应ajax请求
@@ -82,22 +82,21 @@ public class MyController {
 
     /**
      * 处理器方法返回一个Student，通过框架转为json，响应ajax请求
-     * @ResponseBody:
-     *      作用：把处理器方法返回对象转为json后，通过HttpServletResponse输出给浏览器。
-     *      位置：方法的定义上面。和其它注解没有顺序的关系。
-     *  返回对象框架的处理流程：
-     *      1.框架会把返回Student类型，调用框架中ArrayList<HttpMessageConverter>中每个类的canWrite()方法
-     *          检查哪个HttpMessageConverter接口的实现类能处理Student类型的数据--MappingJackson2HttpMessageConverter
      *
-     *      2. 框架会调用实现类的write(),MappingJackson2HttpMessageConverter的write()方法
-     *          把李四同学的student对象转为json，调用Jackson的ObjectMapper实现转为json
-     *
-     *      3.框架会调用@ResponseBody把2的结果数据输出到浏览器，ajax请求处理完成
-     *
+     * @ResponseBody: 作用：把处理器方法返回对象转为json后，通过HttpServletResponse输出给浏览器。
+     * 位置：方法的定义上面。和其它注解没有顺序的关系。
+     * 返回对象框架的处理流程：
+     * 1.框架会把返回Student类型，调用框架中ArrayList<HttpMessageConverter>中每个类的canWrite()方法
+     * 检查哪个HttpMessageConverter接口的实现类能处理Student类型的数据--MappingJackson2HttpMessageConverter
+     * <p>
+     * 2. 框架会调用实现类的write(),MappingJackson2HttpMessageConverter的write()方法
+     * 把李四同学的student对象转为json，调用Jackson的ObjectMapper实现转为json
+     * <p>
+     * 3.框架会调用@ResponseBody把2的结果数据输出到浏览器，ajax请求处理完成
      */
     @RequestMapping(value = "/returnStudentJson.do")
     @ResponseBody
-    public Student doStudentJsonObject(String name,Integer age){
+    public Student doStudentJsonObject(String name, Integer age) {
         //调用service，获取请求结果数据，Student对象表示结果数据
         Student student = new Student();
         student.setName("李四同学");
@@ -108,7 +107,7 @@ public class MyController {
     //处理器方法返回List<Student>
     @RequestMapping(value = "/returnStudentJsonArray.do")
     @ResponseBody
-    public List<Student> doStudentJsonObjectArray(String name,Integer age){
+    public List<Student> doStudentJsonObjectArray(String name, Integer age) {
         List<Student> list = new ArrayList<>();
         //调用service，获取请求结果数据，Student对象表示结果数据
         Student student = new Student();
@@ -121,7 +120,29 @@ public class MyController {
         student.setAge(28);
         list.add(student);
 
-        return  list;
+        return list;
     }
 
+    /**
+     * 处理器方法返回的是String，String表示数据的，不是视图。
+     * 区分返回值String是数据，还是视图，看有没有@ResponseBody注解
+     * 如果有@ResponseBody注解，返回String就是数据，反之就是视图
+     *
+     * 默认使用"text/plain;charset=ISO-8859-1"作为contentType,导致中文乱码
+     * 解决方案：给RequestMapping增加一个属性 produces，使用这个属性指定新的contentType
+     *
+     * 返回对象框架的处理流程：
+     *       1.框架会把返回String类型，调用框架中ArrayList<HttpMessageConverter>中每个类的canWrite()方法
+     *       检查哪个HttpMessageConverter接口的实现类能处理String类型的数据--StringHttpMessageConverter
+     *
+     *       2. 框架会调用实现类的write(),StringHttpMessageConverter的write()方法
+     *       把字符集按照指定的编码处理 text/plain;charset=ISO-8859-1
+     *
+     *       3.框架会调用@ResponseBody把2的结果数据输出到浏览器，ajax请求处理完成
+     */
+    @RequestMapping(value = "/returnStringData.do",produces = "text/plain;charset=utf-8")
+    @ResponseBody
+    public String doStringData(String name,Integer age){
+        return "Hello SpringMVC 返回对象，表示数据";
+    }
 }
