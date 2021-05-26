@@ -15,21 +15,15 @@
         <!--后缀：视图文件的扩展名-->
         <property name="suffix" value=".jsp"/>
     </bean>
-
-    <!--第二种处理静态资源的方式
-        mvc:resources 加入后框架会创建 ResourceHttpRequestHandler这个处理器对象
-        让这个对象处理静态资源的访问，不依赖tomcat服务器
-        mapping：访问静态资源的url地址，使用通配符 **
-        location：静态资源在你的项目中的目录位置
-    -->
-
-    <mvc:resources mapping="/images/**" location="/images/"/>
-    <mvc:resources mapping="/html/**" location="/html/"/>
-    <mvc:resources mapping="/js/**" location="/js/"/>
-
-    <!--mvc:resources和@RequestMapping有一定的冲突-->
+    <!--default-servlet-handler 和 @RequestMapping注解 有冲突，需要加入 annotation-driven 解决问题-->
+    <!--但是我的没加注解驱动，也能够成功运行，不知道为啥-->
     <mvc:annotation-driven/>
 
-    <!--使用一个配置语句，指定多种静态资源的访问-->
-    <!--<mvc:resources mapping="/static/**" location="/static/"/>-->
+
+    <!--第一种处理静态资源的方式：
+        需要springmvc配置文件加入 <mvc:default-servlet-handler/>
+        原理是：加入这个标签后，框架会创建控制器对象DefaultServletHttpRequestHandler(类似我们自己创建的MyController)
+        DefaultServletHttpRequestHandler这个对象可以把接收的请求转发给 tomcat的default这个servlet
+    -->
+    <mvc:default-servlet-handler/>
 </beans>
